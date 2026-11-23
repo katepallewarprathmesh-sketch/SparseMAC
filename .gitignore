@@ -4,3 +4,4 @@ __pycache__/
 *.pyc
 results.xml
 formal/scheduler/
+formal/scheduler_prove/

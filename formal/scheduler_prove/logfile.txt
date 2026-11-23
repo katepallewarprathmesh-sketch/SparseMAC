@@ -1,2 +1,0 @@
-SBY 13:15:44 [scheduler_prove] Removing directory '/home/user/projects/SparseMAC/formal/scheduler_prove'.
-SBY 13:15:44 [scheduler_prove] ERROR: sby file syntax error: unexpected section 'prove', expected one of 'options, engines, script, autotune, file, files'
