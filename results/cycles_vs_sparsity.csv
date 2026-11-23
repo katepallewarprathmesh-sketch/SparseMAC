@@ -1,0 +1,13 @@
+sparsity,mode,nnz,compute_cycles
+0.0,dense,32,32
+0.0,skip,32,32
+0.25,dense,25,32
+0.25,skip,25,25
+0.5,dense,17,32
+0.5,skip,16,16
+0.75,dense,8,32
+0.75,skip,10,10
+0.95,dense,0,32
+0.95,skip,0,0
+1.0,dense,0,32
+1.0,skip,0,0

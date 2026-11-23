@@ -1,0 +1,15 @@
+[options]
+mode prove
+depth 40
+multiclock off
+
+[engines]
+smtbmc z3
+
+[script]
+read_verilog -formal -sv sparse_scheduler.sv scheduler_formal.sv
+prep -top scheduler_formal
+
+[files]
+../rtl/sparse_scheduler.sv
+scheduler_formal.sv

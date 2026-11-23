@@ -1,0 +1,7 @@
+SparseMAC functional coverage (TB-measured bins)
+sparsity bins hit: 6/6 ['0.0', '0.25', '0.5', '0.75', '0.95', '1.0']
+modes hit: ['0', '1'] (dense,skip)
+edge cases hit: ['all_nonzero', 'all_zero', 'first', 'last', 'mid'] (5/5 expected)
+value bins hit: ['-1', '-128', '0', '1', '127']
+stall bins hit: ['x_bubble', 'y_stall']
+bin coverage: 19/19 = 100.0%

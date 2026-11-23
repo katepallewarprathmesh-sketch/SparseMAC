@@ -1,0 +1,4 @@
+Yosys generic-synth cells: 498
+Modes share one RTL (ADR-0005): area identical by construction.
+Break-even sparsity (energy proxy): 0.03900521109620244
+Power/energy are toggle-count proxies, NOT signoff. OpenROAD/OpenSTA unavailable in this environment.

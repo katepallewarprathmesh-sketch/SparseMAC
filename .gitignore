@@ -1,0 +1,6 @@
+*.vvp
+sim_build/
+__pycache__/
+*.pyc
+results.xml
+formal/scheduler/

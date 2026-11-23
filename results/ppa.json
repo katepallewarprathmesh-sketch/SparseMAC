@@ -1,0 +1,7 @@
+{
+  "tool": "Yosys 0.52 generic synth (no PDK; cell count is a proxy)",
+  "cells": 498,
+  "note": "One RTL for both modes (ADR-0005): area identical by construction. OpenROAD/OpenSTA not available here; power is a labeled toggle-count proxy, not signoff.",
+  "break_even_sparsity": 0.03900521109620244,
+  "energy_units": "normalized (E_MAC=1 per issue, E_ENC=2/vector)"
+}

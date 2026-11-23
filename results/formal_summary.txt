@@ -1,0 +1,13 @@
+SparseMAC scheduler formal proof (SymbiYosys, smtbmc + z3)
+===========================================================
+Task:    formal/scheduler.sby  (mode prove, depth 40, M=8 instance)
+Result:  PASS - successful proof by k-induction (basecase + induction)
+Runtime: ~19 s
+Properties proven:
+  P1: an issue never fires for a cleared bitmap bit.
+  P2a: no bit is issued twice.
+  P2b: when done, issued set == initial bitmap (nothing missed).
+  (Termination within popcount cycles follows from P2a+P2b: each issue
+   clears one bit and done fires exactly when the bitmap drains.)
+Assumptions (contract with top FSM): reset at time zero; start is a
+single-cycle pulse issued once per drain; bitmap stable during drain.

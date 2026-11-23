@@ -1,0 +1,17 @@
+[options]
+mode prove
+multiclock off
+
+[engines]
+solver smtbmc z3
+
+[script]
+read -formal ../rtl/sparse_scheduler.sv scheduler_formal.sv
+prep -top scheduler_formal
+
+[files]
+../rtl/sparse_scheduler.sv
+scheduler_formal.sv
+
+[prove]
+depth 40
