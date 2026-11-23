@@ -1,7 +1,8 @@
-SparseMAC functional coverage (TB-measured bins)
-sparsity bins hit: 6/6 ['0.0', '0.25', '0.5', '0.75', '0.95', '1.0']
+SparseMAC directed testbench bins (not code or functional coverage percentage)
+exact-nnz points hit: 7/7 ['0/32 nonzero', '1/32 nonzero', '16/32 nonzero', '2/32 nonzero', '24/32 nonzero', '32/32 nonzero', '8/32 nonzero']
 modes hit: ['0', '1'] (dense,skip)
 edge cases hit: ['all_nonzero', 'all_zero', 'first', 'last', 'mid'] (5/5 expected)
-value bins hit: ['-1', '-128', '0', '1', '127']
+value bins exercised: ['-1', '-128', '0', '1', '127']
 stall bins hit: ['x_bubble', 'y_stall']
-bin coverage: 19/19 = 100.0%
+hand-defined testbench bins hit: 21/21
+paired sweep samples per point per mode: 16

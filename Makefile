@@ -4,7 +4,7 @@
 test: lint
 	$(MAKE) -C tb_cocotb
 
-regress: test formal results
+regress: formal results
 
 lint:
 	verilator --lint-only -Wall --top-module sparsemac \
@@ -13,7 +13,7 @@ lint:
 formal:
 	cd formal && sby -f scheduler.sby
 
-results:
+results: test
 	python3 scripts/run_ppa.py
 
 clean:

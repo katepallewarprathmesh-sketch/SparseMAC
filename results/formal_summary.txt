@@ -3,7 +3,7 @@ SparseMAC scheduler formal proof (SymbiYosys, smtbmc + z3)
 Task:    formal/scheduler.sby  (mode prove, depth 40, M=8 instance)
 Result:  PASS - successful proof by k-induction (basecase + induction)
 Runtime: ~19 s
-Properties proven:
+Immediate assertions proven by k-induction:
   P1: an issue never fires for a cleared bitmap bit.
   P2a: no bit is issued twice.
   P2b: when done, issued set == initial bitmap (nothing missed).

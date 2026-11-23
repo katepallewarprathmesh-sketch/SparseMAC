@@ -1,7 +1,15 @@
 {
-  "tool": "Yosys 0.52 generic synth (no PDK; cell count is a proxy)",
-  "cells": 498,
-  "note": "One RTL for both modes (ADR-0005): area identical by construction. OpenROAD/OpenSTA not available here; power is a labeled toggle-count proxy, not signoff.",
-  "break_even_sparsity": 0.03900521109620244,
-  "energy_units": "normalized (E_MAC=1 per issue, E_ENC=2/vector)"
+  "tool": "Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)",
+  "top": "sparsemac",
+  "generic_cell_count": 8979,
+  "scope": "generic Yosys synthesis; no PDK or physical implementation",
+  "energy_status": "analytical scenario only; no RTL toggle counting",
+  "energy_assumptions": {
+    "E_MAC_normalized_per_issue": 1.0,
+    "E_ENC_normalized_fixed_skip_overhead_per_vector": 2.0,
+    "P_LEAK_normalized": 0.05,
+    "skip_activity_factor": "nnz / M (assumed, not measured)"
+  },
+  "cycle_samples": "results/cycle_samples.csv",
+  "vectors_per_point_per_mode": 16
 }

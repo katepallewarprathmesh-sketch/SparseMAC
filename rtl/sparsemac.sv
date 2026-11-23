@@ -71,6 +71,13 @@ module sparsemac #(
     logic [LEN_W-1:0]         vec_len_q;   // latched at vector start
     logic                     mode_q;      // latched at vector start
     logic [IDX_W-1:0]         x_idx;
+    logic [IDX_W-1:0]         last_idx;
+
+    // Subtract at index width. Truncation is intentional for power-of-two M:
+    // vec_len=M wraps to index M-1 (e.g. 32 -> 31).
+    always_comb begin
+        last_idx = vec_len_q[IDX_W-1:0] - IDX_W'(1);
+    end
 
     // ---- Accumulators ----
     logic signed [ACC_W-1:0]  acc [0:N-1];
@@ -174,7 +181,7 @@ module sparsemac #(
                     if (x_valid && x_ready) begin
                         x_buf[x_idx] <= $signed(x_data);
                         bitmap[x_idx] <= (x_data != '0);
-                        if (x_last || (x_idx == IDX_W'(vec_len_q - 1))) begin
+                        if (x_last || (x_idx == last_idx)) begin
                             // Vector complete: latch control, start compute.
                             // NOTE: bitmap update above is nonblocking, so the
                             // scheduler is started next cycle from the updated
@@ -195,7 +202,7 @@ module sparsemac #(
                     if (issuing)
                         cycles_q <= cycles_q + 32'd1;
                     if (mode_q == 1'b0) begin  // dense
-                        if (dense_j == IDX_W'(vec_len_q - 1)) begin
+                        if (dense_j == last_idx) begin
                             state <= ST_OUTPUT;
                             // Update counters from the collected bitmap.
                             nnz_q     <= nnz_q + popcount_bitmap;
