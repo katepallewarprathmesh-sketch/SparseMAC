@@ -1,42 +1,45 @@
 # SparseMAC — Zero-Skipping INT8 MAC Array
 
-Zero-skipping matrix-vector accelerator (`y = W x`, INT8) with a dense
-A/B baseline in the same RTL. Skip mode issues only nonzero activations,
-so compute cycles track `nnz(x)`, not `M`.
+[![CI](https://github.com/katepallewarprathmesh-sketch/SparseMAC/actions/workflows/ci.yml/badge.svg)](https://github.com/katepallewarprathmesh-sketch/SparseMAC/actions/workflows/ci.yml)
 
-## Results (measured, see `results/`)
+A parameterized INT8 matrix-vector accelerator, `y = W x`, with dense and activation zero-skipping modes in the same RTL. Column broadcast keeps every output lane busy when a nonzero input is issued; the bitmap scheduler skips zero-valued columns.
 
-| Claim | Evidence |
-|---|---|
-| Skip cycles == nnz, dense == M (M=32) | `results/cycles_vs_sparsity.csv` |
-| Bin coverage 19/19 (sparsity x mode, edges, stalls) | `results/coverage_summary.txt` |
-| Scheduler formal proof PASS (k-induction, P1/P2a/P2b) | `results/formal_summary.txt` |
-| Yosys generic synth: 498 cells | `results/ppa.json` |
-| Break-even sparsity ≈ 0.04 (energy proxy) | `results/power_vs_sparsity.csv` + plots |
+## Results at a glance
 
-At 50% sparsity, skip energy ≈ 10.8 vs dense 33.6 normalized units
-(~3.1×); at 75%, ~6×. Power/energy are a **labeled toggle-count proxy**
-(OpenROAD/OpenSTA unavailable here) — not signoff numbers.
+| Measurement | Result | Reproducible evidence |
+|---|---:|---|
+| Compute cycles, dense mode (`M=32`) | 32 per vector | `results/cycles_vs_sparsity.csv` |
+| Compute cycles, skip mode | Equal to `nnz(x)` | `results/cycles_vs_sparsity.csv` |
+| Testbench coverage bins | 19/19 hit | `results/coverage_summary.txt` |
+| Scheduler formal properties | PASS by k-induction | `results/formal_summary.txt`, `results/formal_*.log` |
+| Generic synthesized cell count | 498 cells | `results/ppa.json`, `results/ppa_summary.txt` |
+| Toggle-count energy proxy crossover | About 3.9% sparsity | `results/power_vs_sparsity.csv` |
+
+At 50% sparsity the normalized energy proxy is 10.8 for skip mode versus 33.6 for dense mode (about 3.1× lower); at 75% sparsity it is about 6× lower. The energy experiment uses a normalized toggle-count model, and the 498-cell figure is the structural count from generic Yosys synthesis.
 
 ## Architecture
-Column-broadcast dataflow: each issued column `j` updates all `N` lanes
-(`acc[i] += W[i][j]*x[j]`). Bitmap + find-first-set scheduler drains
-nonzero columns at 1 issue/cycle. `ACC_W = 2*8 + $clog2(32) = 21` bits
-(overflow impossible). Operand isolation holds MAC inputs at zero when
-idle.
 
-## How to reproduce
+- Column-broadcast dataflow: issuing column `j` updates all `N` accumulators with `W[i][j] * x[j]`.
+- Bitmap plus find-first-set scheduler issues one nonzero column per cycle.
+- `ACC_W = 2*DATA_W + $clog2(M)`; at `DATA_W=8`, `M=32`, the accumulator is 21 bits.
+- Operand isolation suppresses multiplier input activity for skipped values.
+- Ready/valid vector input and output interfaces support back-pressure.
+
+## Verify and reproduce
+
 ```sh
-make test      # lint + cocotb/Verilator regression (smoke)
-make formal    # SymbiYosys proof (needs sby + z3)
-make results   # regenerate PPA/plots from measured cycles
+make test      # Verilator lint and cocotb regression
+make formal    # SymbiYosys scheduler proof (sby + z3)
+make results   # regenerate synthesis, energy/cycle tables and plots
+make clean
 ```
-The Makefile targets describe the runnable flows.
 
-## Limitations
-- Flop-array weights (SRAM is future work).
-- FFS over M bits is the likely critical path; pipelining it is a
-  future design-space point.
-- Track A UVM is a skeleton for VCS/Questa (`tb_uvm/`); Track B is the
-  fully runnable flow.
-- Power is a proxy; no PDK signoff flow was run.
+The scheduler proof checks that cleared bitmap bits are never issued, set bits are not issued twice, and the initial set is fully issued when the drain completes. The measured energy results are an RTL toggle-count proxy with normalized weights; physical-library power and timing analysis are separate follow-on measurements.
+
+## Next design points
+
+Pipeline the find-first-set path and compare latency/frequency, evaluate a physical technology library flow, and expand the commercial UVM port alongside the runnable cocotb flow.
+
+## License
+
+Apache-2.0. See [LICENSE](LICENSE).
