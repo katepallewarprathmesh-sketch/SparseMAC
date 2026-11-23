@@ -23,7 +23,7 @@ Column-broadcast dataflow: each issued column `j` updates all `N` lanes
 (`acc[i] += W[i][j]*x[j]`). Bitmap + find-first-set scheduler drains
 nonzero columns at 1 issue/cycle. `ACC_W = 2*8 + $clog2(32) = 21` bits
 (overflow impossible). Operand isolation holds MAC inputs at zero when
-idle. See `docs/spec.md` and `docs/adr/`.
+idle.
 
 ## How to reproduce
 ```sh
@@ -31,12 +31,12 @@ make test      # lint + cocotb/Verilator regression (smoke)
 make formal    # SymbiYosys proof (needs sby + z3)
 make results   # regenerate PPA/plots from measured cycles
 ```
-Tool versions: `docs/toolchain.md`.
+The Makefile targets describe the runnable flows.
 
 ## Limitations
-- Flop-array weights (SRAM is future work, ADR-0006).
-- FFS over M bits is the likely critical path; pipelining it is the
-  documented design-space point.
+- Flop-array weights (SRAM is future work).
+- FFS over M bits is the likely critical path; pipelining it is a
+  future design-space point.
 - Track A UVM is a skeleton for VCS/Questa (`tb_uvm/`); Track B is the
   fully runnable flow.
 - Power is a proxy; no PDK signoff flow was run.
